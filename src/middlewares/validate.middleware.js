@@ -1,10 +1,13 @@
-const validate = (schema) => (req, res, next) => {
+const validate = (schema) => {
+  return (req, res, next) => {
+  console.log("🚀 ~ validate ~ req:", req)
   const result = schema.safeParse({
     body: req.body,
     params: req.params,
     query: req.query,
   });
-
+  console.log("🚀 ~ validate ~ result:", result)
+    
   if (!result.success) {
     return res.status(400).json({
       success: false,
@@ -15,6 +18,7 @@ const validate = (schema) => (req, res, next) => {
 
   req.validated = result.data;
   next();
+};
 };
 
 module.exports = validate;

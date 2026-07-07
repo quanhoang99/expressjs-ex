@@ -18,7 +18,6 @@ const loginSchema = z.object({
   params: z.object({}).optional(),
   query: z.object({}).optional(),
 });
-
 module.exports = {
   registerSchema,
   loginSchema,
