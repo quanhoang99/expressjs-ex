@@ -18,7 +18,24 @@ const loginSchema = z.object({
   params: z.object({}).optional(),
   query: z.object({}).optional(),
 });
+
+const changePasswordSchema = z
+  .object({
+    body: z.object({
+      oldPassword: z.string().min(1),
+      newPassword: z.string().min(6),
+      confirmPassword: z.string().min(1),
+    }),
+    params: z.object({}).optional(),
+    query: z.object({}).optional(),
+  })
+  .refine(({ body }) => body.newPassword === body.confirmPassword, {
+    path: ['body', 'confirmPassword'],
+    message: 'Passwords do not match',
+  });
+
 module.exports = {
   registerSchema,
   loginSchema,
+  changePasswordSchema,
 };

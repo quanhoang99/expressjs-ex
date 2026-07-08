@@ -39,8 +39,24 @@ const login = async ({ email, password }) => {
 
   return { user, token };
 };
+const changePassword = async (user, { oldPassword, newPassword }) => {
+  const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
 
+  if (!isPasswordValid) {
+    throw new AppError('Invalid password', 400);
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  const updatedUser = await userService.updateUser(user.id, {
+    password: hashedPassword,
+  });
+  const token = signToken({ id: updatedUser.id });
+  updatedUser.password = undefined;
+
+  return { user: updatedUser, token };
+};
 module.exports = {
   register,
   login,
+  changePassword,
 };

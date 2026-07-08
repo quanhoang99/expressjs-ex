@@ -6,13 +6,13 @@ const createUser = async (data) => {
 };
 
 const findUserByEmail = async (email, includePassword = false) => {
-  console.log("🚀 ~ findUserByEmail ~ email:", email)
+  console.log('🚀 ~ findUserByEmail ~ email:', email);
   const query = User.findOne({ email });
   return includePassword ? query.select('+password') : query;
 };
 
 const findUserById = async (id) => {
-  return User.findById(id);
+  return User.findById(id).select('+password');
 };
 
 const getCurrentUser = async (userId) => {
@@ -24,10 +24,13 @@ const getCurrentUser = async (userId) => {
 
   return user;
 };
-
+const updateUser = async (userId, data) => {
+  return User.findByIdAndUpdate(userId, data, { new: true });
+};
 module.exports = {
   createUser,
   findUserByEmail,
   findUserById,
   getCurrentUser,
+  updateUser,
 };

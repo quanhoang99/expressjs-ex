@@ -23,7 +23,7 @@ app.use(
     limit: 100,
     standardHeaders: true,
     legacyHeaders: false,
-  })
+  }),
 );
 
 app.get('/health', (req, res) => {
