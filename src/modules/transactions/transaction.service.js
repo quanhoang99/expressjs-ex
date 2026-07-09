@@ -7,11 +7,17 @@ const createTransaction = async (userId, data) => {
   });
 };
 
-const getTransactions = async (userId) => {
-  return Transaction.find({ user: userId }).sort({ transactionDate: -1 });
+const getTransactions = async (userId, query) => {
+  const { page = 1, pageSize = 10 } = query;
+  const skip = (page - 1) * pageSize;
+  return Transaction.find({ user: userId }).skip(skip).limit(pageSize).sort({ createdAt: -1 });
+};
+const getTransactionsCount = async (userId) => {
+  return Transaction.countDocuments({ user: userId });
 };
 
 module.exports = {
   createTransaction,
   getTransactions,
+  getTransactionsCount,
 };

@@ -6,7 +6,6 @@ const createUser = async (data) => {
 };
 
 const findUserByEmail = async (email, includePassword = false) => {
-  console.log('🚀 ~ findUserByEmail ~ email:', email);
   const query = User.findOne({ email });
   return includePassword ? query.select('+password') : query;
 };

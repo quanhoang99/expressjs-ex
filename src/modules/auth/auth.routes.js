@@ -1,7 +1,12 @@
 const express = require('express');
 const { validate, auth } = require('@/middlewares');
 const authController = require('@/modules/auth/auth.controller');
-const { registerSchema, loginSchema, changePasswordSchema } = require('./auth.validation');
+const {
+  registerSchema,
+  loginSchema,
+  changePasswordSchema,
+  forgotPasswordSchema,
+} = require('./auth.validation');
 
 const router = express.Router();
 
@@ -13,5 +18,6 @@ router.post(
   validate(changePasswordSchema),
   authController.changePassword,
 );
+router.post('/forgot-password', validate(forgotPasswordSchema), authController.forgotPassword);
 
 module.exports = router;

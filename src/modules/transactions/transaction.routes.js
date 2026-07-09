@@ -1,18 +1,15 @@
 const express = require('express');
-const authMiddleware = require('../../middlewares/auth.middleware');
-const validate = require('../../middlewares/validate.middleware');
+// const authMiddleware = require('../../middlewares/auth.middleware');
+// const validate = require('../../middlewares/validate.middleware');
+const { validate, auth } = require('@/middlewares');
 const transactionController = require('./transaction.controller');
-const { createTransactionSchema } = require('./transaction.validation');
+const { createTransactionSchema, getTransactionsSchema } = require('./transaction.validation');
 
 const router = express.Router();
 
 router
   .route('/')
-  .get(authMiddleware, transactionController.getTransactions)
-  .post(
-    authMiddleware,
-    validate(createTransactionSchema),
-    transactionController.createTransaction
-  );
+  .get(auth, validate(getTransactionsSchema), transactionController.getTransactions)
+  .post(auth, validate(createTransactionSchema), transactionController.createTransaction);
 
 module.exports = router;

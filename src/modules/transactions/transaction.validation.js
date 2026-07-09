@@ -11,7 +11,16 @@ const createTransactionSchema = z.object({
   params: z.object({}).optional(),
   query: z.object({}).optional(),
 });
+const getTransactionsSchema = z.object({
+  body: z.object({}).optional(),
+  params: z.object({}).optional(),
+  query: z.object({
+    page: z.coerce.number().int().min(1).default(1),
+    pageSize: z.coerce.number().int().min(1).max(100).default(10),
+  }),
+});
 
 module.exports = {
   createTransactionSchema,
+  getTransactionsSchema,
 };

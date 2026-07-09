@@ -33,9 +33,17 @@ const changePasswordSchema = z
     path: ['body', 'confirmPassword'],
     message: 'Passwords do not match',
   });
+const forgotPasswordSchema = z.object({
+  body: z.object({
+    email: z.string().email(),
+  }),
+  params: z.object({}).optional(),
+  query: z.object({}).optional(),
+});
 
 module.exports = {
   registerSchema,
   loginSchema,
   changePasswordSchema,
+  forgotPasswordSchema,
 };
