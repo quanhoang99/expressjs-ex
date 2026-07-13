@@ -47,8 +47,10 @@ const changePassword = async (user, { oldPassword, newPassword }) => {
     throw new AppError('Invalid password', 400);
   }
   const hashedPassword = await bcrypt.hash(newPassword, 10);
+  const now = Date.now();
   const updatedUser = await userService.updateUser(user.id, {
     password: hashedPassword,
+    passwordChangedAt: now,
   });
   const token = signToken({ id: updatedUser.id });
   updatedUser.password = undefined;
@@ -56,12 +58,11 @@ const changePassword = async (user, { oldPassword, newPassword }) => {
   return { user: updatedUser, token };
 };
 const forgotPassword = async (email) => {
-  const DEFAULT_PASSWORD = '123456';
   const user = await userService.findUserByEmail(email);
   if (!user) {
     throw new AppError('User not found', 404);
   }
-  const hashedPassword = await bcrypt.hash(DEFAULT_PASSWORD, 10);
+  const hashedPassword = await bcrypt.hash(process.env.DEFAULT_PASSWORD, 10);
   const updatedUser = await userService.updateUser(user.id, { password: hashedPassword });
 
   const resetToken = signToken({ id: updatedUser.id });

@@ -19,10 +19,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
+    passwordChangedAt: { type: Date },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model('User', userSchema);

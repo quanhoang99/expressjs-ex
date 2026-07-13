@@ -9,6 +9,7 @@ const userRoutes = require('./modules/users/user.routes');
 const transactionRoutes = require('./modules/transactions/transaction.routes');
 const notFoundMiddleware = require('./middlewares/notFound.middleware');
 const errorMiddleware = require('./middlewares/error.middleware');
+const uploadRouter = require('./modules/uploadFile/upload.routes');
 
 const app = express();
 
@@ -36,6 +37,8 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/uploads', express.static('uploads'));
+app.use('/api/upload', uploadRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

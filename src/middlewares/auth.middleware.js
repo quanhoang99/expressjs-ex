@@ -3,9 +3,10 @@ const asyncHandler = require('../utils/asyncHandler');
 const { verifyToken } = require('../utils/jwt');
 const userService = require('../modules/users/user.service');
 
-const isTokenObsolete = (userUpdatedAt, tokenIssuedAt) => {
-  const userUpdatedTime = userUpdatedAt.getTime();
-  return userUpdatedTime !== tokenIssuedAt;
+const isTokenObsolete = (passwordChangedAt, tokenIssuedAt) => {
+  if (!passwordChangedAt) return false;
+  const passwordChangedTimeInSeconds = Math.floor(passwordChangedAt.getTime() / 1000);
+  return passwordChangedTimeInSeconds > tokenIssuedAt;
 };
 const authMiddleware = asyncHandler(async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -16,14 +17,11 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
   const payload = verifyToken(token);
-  console.log('🚀 ~ payload:', payload);
-
   const user = await userService.findUserById(payload.id);
-  console.log('🚀 ~ user:', user);
   if (!user) {
     throw new AppError('Unauthorized', 401);
   }
-  if (isTokenObsolete(user.updatedAt, payload.iat)) {
+  if (isTokenObsolete(user.passwordChangedAt, payload.iat)) {
     throw new AppError('Token has expired due to password change. Please login again.', 401);
   }
 
